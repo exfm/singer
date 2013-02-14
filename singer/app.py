@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 import json
 import time
@@ -117,7 +117,13 @@ def retry_on_exception():
 
 @app.route('/api/hosts/<service_name>')
 def hosts(service_name):
-    pass
+    r = get_redis()
+    d = r.hgetall(service_name)
+    hosts = []
+    if d:
+        for k in d:
+            hosts.append(json.loads(d[k])['hostname'])
+    return jsonify({'hosts': hosts})
 
 
 @app.route('/api/autoscaling-notification', methods=['POST'])
