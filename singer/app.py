@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import requests
 import json
 import time
@@ -122,7 +122,13 @@ def hosts(service_name):
 
 @app.route('/api/autoscaling-notification', methods=['POST'])
 def autoscaling_notification():
-    pass
+    app.logger.info('/api/autoscaling-notification called.')
+    post_data = json.loads(request.data)
+    app.logger.info(post_data)
+    if post_data.get('Type') == 'SubscriptionConfirmation':
+        return handle_confirmation(post_data)
+    elif post_data.get('Type') == 'Notification':
+        return handle_notification(post_data)
 
 
 @app.route('/api/bootstrap/<service_name>', methods=['POST'])
