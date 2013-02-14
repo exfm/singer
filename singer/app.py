@@ -62,7 +62,7 @@ def get_next_service_number(service_name):
     r53 = boto.connect_route53(app.config['aws']['key'],
         app.config['aws']['secret'])
 
-    zone_id = app.config['dns']['external']
+    zone_id = app.config['dns']['external_zone_id']
 
     sets = r53.get_all_rrsets(zone_id)
     for i in xrange(len(sets)):
@@ -116,7 +116,7 @@ def retry_on_exception():
 
 
 @app.route('/api/hosts/<service_name>')
-def hosts(service_name):
+def hosts_for_service_name(service_name):
     r = get_redis()
     d = r.hgetall(service_name)
     hosts = []
@@ -124,6 +124,12 @@ def hosts(service_name):
         for k in d:
             hosts.append(json.loads(d[k])['hostname'])
     return jsonify({'hosts': hosts})
+
+
+@app.route('/api/hosts')
+def all_hosts():
+    """Useful for service lookups."""
+    pass
 
 
 @app.route('/api/autoscaling-notification', methods=['POST'])
@@ -139,6 +145,7 @@ def autoscaling_notification():
 
 @app.route('/api/bootstrap/<service_name>', methods=['POST'])
 def bootstrap_service(service_name):
+    """Called by bootstrap.py on instance start."""
     pass
 
 
@@ -161,7 +168,8 @@ def wait_for_instance_to_start(instance_id):
 
 
 def handle_notification(post_data):
-    """@todo (lucas) The environment should be backed into the ASG name as well."""
+    """@todo (lucas) The environment should be backed into the ASG name as well.
+    @todo (lucas) Add support for internal DNS (private IP)"""
     message = json.loads(post_data.get('Message'))
     event = message.get('Event')
     service_name = message.get('AutoScalingGroupName').split('-')[0]
