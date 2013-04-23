@@ -1,2 +1,6 @@
 *.pyc
 example_config.json
+config.json
+.DS_store
+node_modules/
+npm-debug.log

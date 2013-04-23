@@ -1,0 +1,33 @@
+{
+  "author": "Lucas Hrabovsky <lucas@ex.fm>",
+  "name": "singer",
+  "description": "All of the ops.",
+  "version": "0.0.0",
+  "homepage": "http://github.com/exfm/singer",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/exfm/singer.git"
+  },
+  "dependencies": {
+    "express": "3.1.0",
+    "nconf": "0.6.7",
+    "mambo": "0.0.22",
+    "up": "git://github.com/LearnBoost/up.git",
+    "q": "0.9.3",
+    "plog": "0.0.4",
+    "plata": "0.0.34",
+    "nunjucks": "0.1.8a"
+  },
+  "devDependencies": {
+    "mocha": "1.8.1",
+    "magneto": "0.1.7",
+    "grunt": "~0.4.1"
+  },
+  "scripts": {
+    "test": "grunt test",
+    "start": "./node_modules/.bin/up -n 3 -p 8080 --watch server.js --keepalive"
+  },
+  "engines": {
+    "node": "*"
+  }
+}
